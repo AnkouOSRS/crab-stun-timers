@@ -71,6 +71,8 @@ public class CrabStunPlugin extends Plugin {
 	@Getter(AccessLevel.PACKAGE)
 	private final List<CrabStun> stunEvents = new ArrayList<>();
 
+	private static final int RAID_PARTY_SIZE = 5424;
+
 	@Override
 	protected void startUp() {
 		overlayManager.add(overlay);
@@ -88,7 +90,7 @@ public class CrabStunPlugin extends Plugin {
 		}
 		final int CRAB_STUN_GRAPHIC = 245;
 		Actor actor = event.getActor();
-		if (actor.getName() != null && actor.getName().contains("Jewelled Crab") && actor.getGraphic() == CRAB_STUN_GRAPHIC) {
+		if (actor.getName() != null && actor.getName().contains("Jewelled Crab") && actor.hasSpotAnim(CRAB_STUN_GRAPHIC)) {
 			WorldPoint worldPoint = actor.getWorldLocation();
 			CrabStun stunEvent = new CrabStun(actor, worldPoint, Instant.now(), getStunDurationTicks(), 0);
 			for (CrabStun stun : stunEvents) {
@@ -119,7 +121,7 @@ public class CrabStunPlugin extends Plugin {
 	}
 
 	private int getStunDurationTicks() {
-		switch (client.getVarbitValue(Varbits.RAID_PARTY_SIZE)) {
+		switch (client.getVarbitValue(RAID_PARTY_SIZE)) {
 			case 1:
 				return TeamSize.ONE.getStunDuration();
 			case 2:
